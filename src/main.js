@@ -3,6 +3,9 @@ import App from './App.vue'
 import store from './store'
 import i18n from './i18n'
 import vuetify from './plugins/vuetify';
+import VueLodash from 'vue-lodash'
+
+Vue.use(VueLodash)
 
 Vue.config.productionTip = false
 

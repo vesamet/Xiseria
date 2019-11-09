@@ -1,60 +1,100 @@
 <template>
   <v-app>
-    <v-app-bar
-      app
-      color="primary"
-      dark
-    >
-      <div class="d-flex align-center">
-        <v-img
-          alt="Vuetify Logo"
-          class="shrink mr-2"
-          contain
-          src="https://cdn.vuetifyjs.com/images/logos/vuetify-logo-dark.png"
-          transition="scale-transition"
-          width="40"
-        />
+    <v-navigation-drawer v-model="drawer" app left>
+      <SideNav></SideNav>
+      <PageList></PageList>
+    </v-navigation-drawer>
 
-        <v-img
-          alt="Vuetify Name"
-          class="shrink mt-1 hidden-sm-and-down"
-          contain
-          min-width="100"
-          src="https://cdn.vuetifyjs.com/images/logos/vuetify-name-dark.png"
-          width="100"
-        />
-      </div>
-
+    <v-system-bar app height="30" color="primary">
+      <v-icon class="rounded" size="20" v-ripple @click.stop="drawer = !drawer">mdi-menu</v-icon>
+      <h1 class="app-title accent--text">XISERIA</h1>
       <v-spacer></v-spacer>
-
-      <v-btn
-        href="https://github.com/vuetifyjs/vuetify/releases/latest"
-        target="_blank"
-        text
-      >
-        <span class="mr-2">Latest Release</span>
-        <v-icon>mdi-open-in-new</v-icon>
-      </v-btn>
-    </v-app-bar>
+      <HeaderNav></HeaderNav>
+      <v-icon
+        class="rounded"
+        v-ripple
+        @click.stop="$vuetify.theme.dark = !$vuetify.theme.dark"
+      >mdi-format-paint</v-icon>
+      <span>{{dateNow}}</span>
+    </v-system-bar>
 
     <v-content>
-      <HelloWorld/>
+      <v-container class="fill-height" fluid>
+        <v-row align="center" justify="center">
+          <v-col class="text-center">
+            <Page></Page>
+          </v-col>
+        </v-row>
+      </v-container>
     </v-content>
+
+    <v-footer color="primary" app height="30">
+      <v-spacer />
+      <span class="white--text">&copy; 2019</span>
+    </v-footer>
   </v-app>
 </template>
 
+
 <script>
-import HelloWorld from './components/HelloWorld';
+import HeaderNav from "./components/HeaderNav";
+import SideNav from "./components/SideNav";
+import Page from "./components/Page";
+import PageList from "./components/PageList";
 
 export default {
-  name: 'App',
+  name: "App",
 
   components: {
-    HelloWorld,
+    HeaderNav,
+    SideNav,
+    Page,
+    PageList
   },
 
   data: () => ({
-    //
+    drawer: null,
+    dateNow: "",
+    darkMode: false
   }),
+  methods: {
+    time() {
+      var d = new Date();
+      this.dateNow = d.getHours() + ":" + d.getMinutes() + ":" + d.getSeconds();
+    }
+  },
+  mounted() {
+    this.interval = setInterval(this.time, 1000);
+  },
+  beforeDestroy() {
+    clearInterval(this.interval);
+  }
 };
 </script>
+
+<style lang="scss">
+@import "./assets/scss/_variables.scss";
+
+html,
+body,
+.v-application {
+  font-family: $text-font !important;
+  font-size: $body-size;
+}
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: $title-font;
+}
+.app-title {
+  padding-left: 10px;
+  font-size: $size-2;
+}
+.rounded {
+  border-radius: 50%;
+  padding: 3px;
+}
+</style>
