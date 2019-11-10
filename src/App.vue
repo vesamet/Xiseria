@@ -10,6 +10,7 @@
       <h1 class="app-title accent--text">XISERIA</h1>
       <v-spacer></v-spacer>
       <HeaderNav></HeaderNav>
+      <v-spacer></v-spacer>
       <v-icon
         class="rounded"
         v-ripple
@@ -20,9 +21,10 @@
 
     <v-content>
       <v-container class="fill-height" fluid>
-        <v-row align="center" justify="center">
-          <v-col class="text-center">
-            <Page></Page>
+        <v-row class="fill-height">
+          <v-col>
+            <VaultList v-if="view == 'vault'"></VaultList>
+            <Page v-if="view == 'page'"></Page>
           </v-col>
         </v-row>
       </v-container>
@@ -30,7 +32,7 @@
 
     <v-footer color="primary" app height="30">
       <v-spacer />
-      <span class="white--text">&copy; 2019</span>
+      <span>Gwenaël Guyot &copy; 2019</span>
     </v-footer>
   </v-app>
 </template>
@@ -38,9 +40,10 @@
 
 <script>
 import HeaderNav from "./components/HeaderNav";
-import SideNav from "./components/SideNav";
-import Page from "./components/Page";
-import PageList from "./components/PageList";
+import SideNav from "./components/SidePanel/SideNav";
+import Page from "./components/BoardPanel/Page";
+import PageList from "./components/SidePanel/PageList";
+import VaultList from "./components/BoardPanel/VaultList";
 
 export default {
   name: "App",
@@ -49,7 +52,8 @@ export default {
     HeaderNav,
     SideNav,
     Page,
-    PageList
+    PageList,
+    VaultList
   },
 
   data: () => ({
@@ -57,10 +61,18 @@ export default {
     dateNow: "",
     darkMode: false
   }),
+  computed: {
+    view() {
+      return this.$store.state.view;
+    }
+  },
   methods: {
     time() {
       var d = new Date();
-      this.dateNow = d.getHours() + ":" + d.getMinutes() + ":" + d.getSeconds();
+      function getSecondsWithZeros(dt) {
+        return (dt.getSeconds() < 10 ? "0" : "") + dt.getSeconds();
+      }
+      this.dateNow = d.getHours() + ":" + d.getMinutes() + ":" + getSecondsWithZeros(d);
     }
   },
   mounted() {
@@ -80,6 +92,12 @@ body,
 .v-application {
   font-family: $text-font !important;
   font-size: $body-size;
+}
+.v-application a {
+  color: inherit !important;
+}
+.v-application p {
+  margin-bottom: 0px !important;
 }
 h1,
 h2,
